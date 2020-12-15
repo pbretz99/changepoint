@@ -38,7 +38,7 @@ while active:
                 break
             init = times[0]
             if len(times) > 1:
-                final = times[-1] + 10
+                final = times[-1]
             else:
                 final = init + 100
             final = min(final, len(W2B0))
@@ -79,14 +79,21 @@ while active:
     # Plotting the changepoints
     plot = input('View plot with marked changepoints? Y/N: ')
     if plot == 'Y':
+        left, right = init, final
+        if final-init > 1000:
+            set_limits = input('Current time window is fairly large. \nManually set plotting size? Y/N: ')
+            if set_limits == 'Y':
+                left = int(input('Enter the left endpoint: '))
+                right = int(input('Enter the right endpoint: '))
         fig = plt.figure(figsize=(8, 6))
-        plt.plot(range(init, final), W2B0[init:final])
+        plt.plot(range(left, right), W2B0[left:right])
         plt.xlabel('Time')
         plt.ylabel('W2 (filtered)')
         plt.title('Detected Regime Change(s)')
-        if times:
-            for t in times:
-                plt.axvline(x=t, color='Blue', ls='--')
+        if len(times) > 2:
+            for t in times[1:(len(times)-1)]:
+                if t <= right and t >= left:
+                    plt.axvline(x=t, color='Blue', ls='--')
         plt.show()
         save = input('Save plot? Y/N: ')
         if save == 'Y':

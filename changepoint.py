@@ -64,7 +64,8 @@ class Model:
 
 #######################################
 # The changepoint detection algorithm #
-#######################################
+#######################################    
+# Returns a list of detected changepoint times (also start and end times)
 def changepoint(x, model, cap, shift):
     # Initialize
     times = [shift]
@@ -100,6 +101,7 @@ def changepoint(x, model, cap, shift):
                 times.append(new_time)
         # Reset run probabilities
         prev_run_probs = new_run_probs
+    times.append(len(x)+shift)
     return times
 
 # Predictive evaluation function

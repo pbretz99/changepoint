@@ -24,14 +24,17 @@ def my_diffs(init, final):
 # Clean up the times that are too close, etc.
 def clean(times, tol=0.001):
     time_prev = 'Initial'
-    ret = []
-    for t in times[1:len(times)]:
+    ret = [times[0]]
+    for t in times[1:(len(times)-1)]:
         keep = keep_conditions(t, time_prev, tol)
         if keep:
             ret.append(t)
             time_prev = t
+    ret.append(times[-1])
     return ret
 
+# Remove times that do not have a peak between them,
+# are too large, or are too close together
 def keep_conditions(t, time_prev, tol):
     keep = True
     if time_prev == 'Initial':
