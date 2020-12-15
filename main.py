@@ -75,7 +75,9 @@ while active:
     # Cleaning up the extraneous times
     clean_times = input('Clean up extraneous times? Y/N: ')
     if clean_times == 'Y':
-        times = ut.clean(times)
+        d_min = int(input('Enter the minimum allowable regime size (recommended 15): '))
+        w2_max = float(input('Enter the maximum allowable W2 value at a changepoint (recommended 0.02): '))
+        times = ut.clean(times, d_min, w2_max)
     # Plotting the changepoints
     plot = input('View plot with marked changepoints? Y/N: ')
     if plot == 'Y':
@@ -85,16 +87,7 @@ while active:
             if set_limits == 'Y':
                 left = int(input('Enter the left endpoint: '))
                 right = int(input('Enter the right endpoint: '))
-        fig = plt.figure(figsize=(8, 6))
-        plt.plot(range(left, right), W2B0[left:right])
-        plt.xlabel('Time')
-        plt.ylabel('W2 (filtered)')
-        plt.title('Detected Regime Change(s)')
-        if len(times) > 2:
-            for t in times[1:(len(times)-1)]:
-                if t <= right and t >= left:
-                    plt.axvline(x=t, color='Blue', ls='--')
-        plt.show()
+        fig = ut.changepoint_plot(times, [left, right])
         save = input('Save plot? Y/N: ')
         if save == 'Y':
             filename = input('Enter filename for saving plot: ')
